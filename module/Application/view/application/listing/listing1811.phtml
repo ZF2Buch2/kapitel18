@@ -1,0 +1,51 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.11 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.11');
+$this->pageTitle('Listing 18.11');
+?>
+<h3>Geänderte <code>updateAction()</code> verarbeitet den Dateiupload</h3>
+<pre>
+&lt;?php
+namespace Pizza\Controller;
+
+use Zend\Http\PhpEnvironment\Response;
+use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\AbstractActionController;
+use Pizza\Service\PizzaServiceInterface;
+
+class AdminController extends AbstractActionController
+{
+    [...]
+    
+    public function updateAction()
+    {
+        [...]
+        
+        $form = $this->getPizzaService()->getForm('update');
+        
+        $prg = $this->fileprg($form);
+        
+        [...]
+    }
+    
+    [...]
+}
+</pre>

@@ -1,0 +1,66 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.3 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.3');
+$this->pageTitle('Listing 18.3');
+?>
+<h3><code>PizzaToppingTable</code> Klasse implementiert <code>Zend\Db\TableGateway</code></h3>
+<pre>
+&lt;?php
+namespace Pizza\Table;
+
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+
+class PizzaToppingTable extends TableGateway implements PizzaToppingTableInterface
+{
+    public function __construct(Adapter $adapter)
+    {
+        parent::__construct('pizzas_toppings', $adapter);
+    }
+    
+    public function savePizzaToppings($pizzaId, $currentToppings, $newToppings)
+    {
+        $deleteToppings = array_diff($currentToppings, $newToppings);
+        $insertToppings = array_diff($newToppings, $currentToppings);
+        
+        if (count($deleteToppings) > 0) {
+            $delete = $this->getSql()->delete();
+            $delete->where->equalTo('pizza_id', $pizzaId);
+            $delete->where->in('topping_id', $deleteToppings);
+            
+            $this->deleteWith($delete);
+        }
+        
+        foreach ($insertToppings as $toppingId) {
+            $insert = $this->getSql()->insert();
+            $insert->values(array(
+                'pizza_id'   => $pizzaId,
+                'topping_id' => $toppingId,
+            ));
+            
+            $this->insertWith($insert);
+        }
+        
+        return true;
+    }
+}
+</pre>

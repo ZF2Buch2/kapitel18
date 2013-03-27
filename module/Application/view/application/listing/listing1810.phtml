@@ -1,0 +1,71 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.10 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.10');
+$this->pageTitle('Listing 18.10');
+?>
+<h3>Geänderter <code>PizzaService</code> für Dateiupload</h3>
+<pre>
+&lt;?php
+namespace Pizza\Service;
+
+[...]
+
+class PizzaService implements EventManagerAwareInterface, PizzaServiceInterface
+{
+    public function save(array $data, $id = null)
+    {
+        [...]
+        
+        if (!$form->isValid()) {
+            $this->setMessage('Bitte Eingaben überprüfen!');
+            return false;
+        }
+        
+        if ($mode == 'update' && $form->get('picture')->getMessages()) {
+            $this->setMessage('Bitte Eingaben überprüfen!');
+            return false;
+        }
+        
+        $formData = $form->getData();
+        
+        if ($mode == 'update') {
+            $oldFile = $formData['picture']['tmp_name'];
+            $newFile = LUIGI_ROOT . '/public/img/uploads/pizza' . $id . '.jpg';
+            
+            if (file_exists($oldFile)) {
+                if (copy($oldFile, $newFile)) {
+                    unlink($oldFile);
+                }
+            }
+        }
+        
+        if (file_exists($oldFile)) {
+            if (copy($oldFile, $newFile)) {
+                unlink($oldFile);
+            }
+        }
+        
+        $pizza->exchangeArray($formData);
+        
+        [...]
+    }
+}
+</pre>

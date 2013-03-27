@@ -1,0 +1,77 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Index view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listings - Kapitel 18');
+$this->pageTitle('Listings - Kapitel 18');
+?>
+<table class="table table-bordered table-striped table-hover table-condensed">
+<thead>
+<tr>
+<th>Listing</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/listing/listing1801">Listing 18.1</a></td>
+<td>Aufbau der Datenbank</td>
+</tr>
+<tr>
+<td><a href="/listing/listing1802">Listing 18.2</a></td>
+<td><code>ToppingTable</code> Klasse implementiert <code>Zend\Db\TableGateway</code></td>
+</tr>
+<tr>
+<td><a href="/listing/listing1803">Listing 18.3</a></td>
+<td><code>PizzaToppingTable</code> Klasse implementiert <code>Zend\Db\TableGateway</code></td>
+</tr>
+<tr>
+<td><a href="/listing/listing1804">Listing 18.4</a></td>
+<td><code>PizzaEntity</code> verbunden mit <code>CrustEntity</code> und <code>ToppingEntity</code></td>
+</tr>
+<tr>
+<td><a href="/listing/listing1805">Listing 18.5</a></td>
+<td><code>PizzaService</code> koordiniert mehrere <code>TableGateway</code>-Objekte</td>
+</tr>
+<tr>
+<td><a href="/listing/listing1806">Listing 18.6</a></td>
+<td><code>Module.php</code> injiziert <code>TableGateway</code>-Objekte bei Bedarf</td>
+</tr>
+<tr>
+<td><a href="/listing/listing1807">Listing 18.7</a></td>
+<td><code>PizzaForm</code> für die Pflege von Pizzadaten</td>
+</tr>
+<tr>
+<td><a href="/listing/listing1808">Listing 18.8</a></td>
+<td>Factory-Klassen für <code>PizzaForm</code></td>
+</tr>
+<tr>
+<td><a href="/listing/listing1809">Listing 18.9</a></td>
+<td>Geänderter <code>PizzaFilter</code> für Dateiupload</td>
+</tr>
+<tr>
+<td><a href="/listing/listing1810">Listing 18.10</a></td>
+<td>Geänderter <code>PizzaService</code> für Dateiupload</td>
+</tr>
+<tr>
+<td><a href="/listing/listing1811">Listing 18.11</a></td>
+<td>Geänderte <code>updateAction()</code> verarbeitet den Dateiupload</td>
+</tr>
+</tbody>
+</table>

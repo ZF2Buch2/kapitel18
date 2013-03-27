@@ -1,0 +1,63 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.9 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.9');
+$this->pageTitle('Listing 18.9');
+?>
+<h3>Geänderter <code>PizzaFilter</code> für Dateiupload</h3>
+<pre>
+&lt;?php
+namespace Pizza\Filter;
+
+[...]
+use Zend\InputFilter\FileInput;
+
+class PizzaFilter extends InputFilter
+{
+    public function __construct()
+    {
+        [...]
+
+        $file = new FileInput('picture');
+        $file->setRequired(false);
+        $file->getFilterChain()->attachByName(
+            'filerenameupload',
+            array(
+                'target'    => LUIGI_ROOT . '/data/upload/tempfile.jpg',
+                'overwrite' => true,
+            )
+        );
+        $file->getValidatorChain()->attachByName(
+            'fileimagesize',
+            array(
+                'minWidth'  => 200, 'maxWidth'  => 200, 
+                'minHeight' => 150, 'maxHeight' => 150
+            )
+        );
+        $file->getValidatorChain()->attachByName(
+            'filemimetype',
+            array('mimeType' => 'image/jpeg')
+        );
+        
+        [...]
+        $this->add($file);
+    }
+}
+</pre>

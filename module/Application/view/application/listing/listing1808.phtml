@@ -1,0 +1,113 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.8 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.8');
+$this->pageTitle('Listing 18.8');
+?>
+<h3>Factory-Klassen für <code>PizzaForm</code></h3>
+<pre>
+&lt;?php
+namespace Pizza\Form;
+
+use Pizza\Filter\PizzaFilter;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
+class CreateFormFactory implements FactoryInterface
+{
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $pizzaEntity   = $serviceLocator->get('Pizza\Entity\Pizza');
+        $statusOptions = $pizzaEntity->getStatusNames();
+        
+        $crustTable   = $serviceLocator->get('Pizza\Table\Crust');
+        $crustOptions = $crustTable->fetchOptions();
+        
+        $toppingTable   = $serviceLocator->get('Pizza\Table\Topping');
+        $toppingOptions = $toppingTable->fetchOptions();
+        
+        $form = new PizzaForm('create');
+        $form->addCsrfElement();
+        $form->addStatusElement($statusOptions, 'status');
+        $form->addNameElement();
+        $form->addPriceElement();
+        $form->addCrustElement($crustOptions, 'crust_id');
+        $form->addToppingsElement($toppingOptions, 'toppings');
+        $form->addDescriptionElement();
+        $form->addSubmitElement('save', 'Speichern');
+        $form->addSubmitElement('cancel', 'Abbrechen');
+        $form->setInputFilter(new PizzaFilter());
+        $form->setValidationGroup(array(
+            'status', 'name', 'description', 'price', 'crust_id', 'toppings',
+            'save', 'cancel'
+        ));
+        return $form;
+    }
+}
+
+class UpdateFormFactory implements FactoryInterface
+{
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $pizzaEntity   = $serviceLocator->get('Pizza\Entity\Pizza');
+        $statusOptions = $pizzaEntity->getStatusNames();
+        
+        $crustTable   = $serviceLocator->get('Pizza\Table\Crust');
+        $crustOptions = $crustTable->fetchOptions();
+        
+        $toppingTable   = $serviceLocator->get('Pizza\Table\Topping');
+        $toppingOptions = $toppingTable->fetchOptions();
+        
+        $form = new PizzaForm('update');
+        $form->addIdElement();
+        $form->addCsrfElement();
+        $form->addPictureElement();
+        $form->addStatusElement($statusOptions, 'status');
+        $form->addNameElement();
+        $form->addPriceElement();
+        $form->addCrustElement($crustOptions, 'crust_id');
+        $form->addToppingsElement($toppingOptions, 'toppings');
+        $form->addDescriptionElement();
+        $form->addSubmitElement('save', 'Speichern');
+        $form->addSubmitElement('cancel', 'Abbrechen');
+        $form->setInputFilter(new PizzaFilter());
+        $form->setValidationGroup(array(
+            'id', 'status', 'name', 'description', 'price', 'crust_id', 
+            'toppings', 'picture', 'save', 'cancel'
+        ));
+        return $form;
+    }
+}
+
+class DeleteFormFactory implements FactoryInterface
+{
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $form = new PizzaForm('delete');
+        $form->addIdElement();
+        $form->addCsrfElement();
+        $form->addSubmitElement('delete', 'Löschen');
+        $form->addSubmitElement('cancel', 'Abbrechen');
+        $form->setInputFilter(new PizzaFilter());
+        $form->setValidationGroup(array('id', 'delete', 'cancel'));
+        return $form;
+    }
+}
+</pre>

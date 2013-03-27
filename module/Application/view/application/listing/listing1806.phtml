@@ -1,0 +1,59 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.6 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.6');
+$this->pageTitle('Listing 18.6');
+?>
+<h3><code>Module.php</code> injiziert <code>TableGateway</code>-Objekte bei Bedarf</h3>
+<pre>
+&lt;?php
+namespace Pizza;
+
+use Zend\Filter\StaticFilter;
+[...]
+
+class Module implements 
+    BootstrapListenerInterface,
+    ConfigProviderInterface, 
+    AutoloaderProviderInterface
+{
+    public function onBootstrap(EventInterface $e)
+    {
+        [...]
+        
+        $sharedEventManager->attach(
+            'Pizza\Service\PizzaService',
+            'set-pizza-table',
+            array($this, 'onTableSet')
+        );
+    }
+    
+    [...]
+    
+    public function onTableSet(EventInterface $e)
+    {
+        $type      = $e->getParam('type', 'pizza');
+        $tableName = StaticFilter::execute($type, 'wordunderscoretocamelcase');
+        $service   = $this->serviceLocator->get('Pizza\Service\Pizza');
+        $form      = $this->serviceLocator->get('Pizza\Table\\' . $tableName);
+        $service->setTable($form, $type);
+    }
+}
+</pre>

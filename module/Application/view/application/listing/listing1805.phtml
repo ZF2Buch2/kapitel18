@@ -1,0 +1,115 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.5 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.5');
+$this->pageTitle('Listing 18.5');
+?>
+<h3><code>PizzaService</code> koordiniert mehrere <code>TableGateway</code>-Objekte</h3>
+<pre>
+&lt;?php
+namespace Pizza\Service;
+
+[...]
+
+class PizzaService implements EventManagerAwareInterface, PizzaServiceInterface
+{
+    protected $tables = array();
+
+    [...]
+    
+    public function __construct(PizzaTableInterface $pizzaTable)
+    {
+        $this->setTable($pizzaTable, 'pizza');
+    }
+    
+    [...]
+    
+    public function getTable($type = 'pizza')
+    {
+        if (!isset($this->tables[$type])) {
+            $this->getEventManager()->trigger(
+                'set-pizza-table', __CLASS__, array('type' => $type)
+            );
+        }
+        
+        return $this->tables[$type];
+    }
+
+    public function setTable(TableGateway $table, $type = 'pizza')
+    {
+        $this->tables[$type] = $table;
+    }
+
+    [...]
+
+    public function addCrustAndToppings($pizza)
+    {
+        $pizza->setCrustEntity(
+            $this->getTable('crust')->fetchSingleById($pizza->getCrustId())
+        );
+        $pizza->setToppings(
+            $this->getTable('topping')->fetchListByPizzaId($pizza->getId())
+        );
+        
+        return $pizza;
+    }
+    
+    public function fetchSingleByUrl($url)
+    {
+        $pizza = $this->getTable('pizza')->fetchSingleByUrl($url);
+        $pizza = $this->addCrustAndToppings($pizza);
+        
+        return $pizza;
+    }
+    
+    public function fetchSingleById($id)
+    {
+        $pizza = $this->getTable('pizza')->fetchSingleById($id);
+        $pizza = $this->addCrustAndToppings($pizza);
+        
+        return $pizza;
+    }
+    
+    [...]
+    
+    public function save(array $data, $id = null)
+    {
+        [...]
+        
+        if ($mode == 'create') {
+            $currentToppings = array();
+        } else {
+            $currentToppings = array_keys($pizza->getToppings());
+        }
+        $newToppings = $data['toppings'];
+        
+        [...]
+        
+        // save toppings
+        $this->getTable('pizza_topping')->savePizzaToppings(
+            $id, $currentToppings, $newToppings
+        );
+        
+        [...]
+    }
+    
+    [...]
+}
+</pre>

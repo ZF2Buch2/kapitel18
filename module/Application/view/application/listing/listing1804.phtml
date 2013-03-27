@@ -1,0 +1,74 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 18
+ * 
+ * Das Buch 'Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung'
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 18.4 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 18.4');
+$this->pageTitle('Listing 18.4');
+?>
+<h3><code>PizzaEntity</code> verbunden mit <code>CrustEntity</code> und <code>ToppingEntity</code></h3>
+<pre>
+&lt;?php
+namespace Pizza\Entity;
+
+use Zend\Filter\StaticFilter;
+
+class PizzaEntity implements PizzaEntityInterface
+{
+    protected $statusNames = array(
+        'blocked'  => 'gesperrt',
+        'approved' => 'genehmigt',
+    );
+    
+    [...]
+    
+    public function getStatusName()
+    {
+        return $this->statusNames[$this->status];
+    }
+    
+    public function getStatusNames()
+    {
+        return $this->statusNames;
+    }
+    
+    [...]
+    
+    public function setCrustEntity(CrustEntityInterface $crustEntity)
+    {
+        $this->crustEntity = $crustEntity;
+    }
+    
+    public function getCrustEntity()
+    {
+        return $this->crustEntity;
+    }
+    
+    public function setToppings(array $toppings)
+    {
+        $this->toppings = $toppings;
+    }
+    
+    public function getToppings()
+    {
+        return $this->toppings;
+    }
+    
+    [...]
+}
+</pre>
