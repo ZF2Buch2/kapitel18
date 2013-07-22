@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 18
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -26,38 +26,43 @@ $this->pageTitle('Listing 18.9');
 &lt;?php
 namespace Pizza\Filter;
 
-[...]
-use Zend\InputFilter\FileInput;
+use Zend\InputFilter\InputFilter;
 
 class PizzaFilter extends InputFilter
 {
-    public function __construct()
+    public function init()
     {
         [...]
 
-        $file = new FileInput('picture');
-        $file->setRequired(false);
-        $file->getFilterChain()->attachByName(
-            'filerenameupload',
-            array(
-                'target'    => LUIGI_ROOT . '/data/upload/tempfile.jpg',
-                'overwrite' => true,
-            )
-        );
-        $file->getValidatorChain()->attachByName(
-            'fileimagesize',
-            array(
-                'minWidth'  => 200, 'maxWidth'  => 200, 
-                'minHeight' => 150, 'maxHeight' => 150
-            )
-        );
-        $file->getValidatorChain()->attachByName(
-            'filemimetype',
-            array('mimeType' => 'image/jpeg')
-        );
-        
-        [...]
-        $this->add($file);
+        $this->add(array(
+            'type'       => 'Zend\InputFilter\FileInput',
+            'name'       => 'picture',
+            'required'   => false,
+            'filters'    => array(
+                array(
+                    'name'    => 'FileRenameUpload',
+                    'options' => array(
+                        'target'    => LUIGI_ROOT . '/data/upload/tempfile.jpg',
+                        'overwrite' => true,
+                    ),
+                ),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'FileImageSize',
+                    'options' => array(
+                        'minWidth'  => 200, 'maxWidth'  => 200, 
+                        'minHeight' => 150, 'maxHeight' => 150,
+                    ),
+                ),
+                array(
+                    'name'    => 'FileMimeType',
+                    'options' => array(
+                        'mimeType' => 'image/jpeg',
+                    ),
+                ),
+            ),
+        ));
     }
 }
 </pre>
